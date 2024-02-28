@@ -13,7 +13,7 @@ do
 
     echo -n "The user $USERNAME is part of the $GROUP_ID gang, "
     echo -n "lives in $HOME_DIR and rides $COMMAND. "
-    echo -n "$USER_ID's place is protected by the passcode $PASSWORD, "
+    echo -n "$USER_ID's place is protected by the passcode $blasting, "
     echo "more info about the user here: $USER_INFO"
 
 done < "/etc/passwd"
