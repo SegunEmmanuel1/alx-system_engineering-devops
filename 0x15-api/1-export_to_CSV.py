@@ -1,18 +1,26 @@
+#!/usr/bin/python3
+"""A script that, uses this REST API, for a given employee ID"""
 
-rts to-do list information for a given employee ID to CSV format."""
 import csv
 import requests
 import sys
 
 if __name__ == "__main__":
-    user_id = sys.argv[1]
-    url = "https://jsonplaceholder.typicode.com/"
-    user = requests.get(url + "users/{}".format(user_id)).json()
-    username = user.get("username")
-    todos = requests.get(url + "todos", params={"userId": user_id}).json()
 
-    with open("{}.csv".format(user_id), "w", newline="") as csvfile:
+    # API request to get employee information
+    url = 'https://jsonplaceholder.typicode.com/'
+
+    # API request to get employee information
+    emp_data = requests.get('{}users/{}'.format(url, sys.argv[1]))
+    j_res = emp_data.json()
+
+    emp_task = requests.get('{}todos?userId={}'.format(url, sys.argv[1]))
+    j_task = emp_task.json()
+    filename = "{}.csv".format(sys.argv[1])
+    with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        [writer.writerow(
-            [user_id, username, t.get("completed"), t.get("title")]
-         ) for t in todos]
+
+        for task in j_task:
+            values = [sys.argv[1], j_res.get('username'),
+                      task['completed'], task['title']]
+            writer.writerow(values)

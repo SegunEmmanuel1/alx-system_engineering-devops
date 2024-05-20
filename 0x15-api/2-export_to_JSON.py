@@ -1,19 +1,32 @@
+#!/usr/bin/python3
+"""A script that, uses this REST API, for a given employee ID"""
 
-rts to-do list information for a given employee ID to JSON format."""
+import csv
 import json
 import requests
 import sys
 
 if __name__ == "__main__":
-    user_id = sys.argv[1]
-    url = "https://jsonplaceholder.typicode.com/"
-    user = requests.get(url + "users/{}".format(user_id)).json()
-    username = user.get("username")
-    todos = requests.get(url + "todos", params={"userId": user_id}).json()
 
-    with open("{}.json".format(user_id), "w") as jsonfile:
-        json.dump({user_id: [{
-                "task": t.get("title"),
-                "completed": t.get("completed"),
-                "username": username
-            } for t in todos]}, jsonfile)
+    # API request to get employee information
+    url = 'https://jsonplaceholder.typicode.com/'
+
+    # API request to get employee information
+    emp_data = requests.get('{}users/{}'.format(url, sys.argv[1]))
+    j_res = emp_data.json()
+
+    emp_task = requests.get('{}todos?userId={}'.format(url, sys.argv[1]))
+    j_task = emp_task.json()
+    all_task = []
+    for task in j_task:
+        all_task.append({"task": task["title"],
+                         "completed": task["completed"],
+                         "username": j_res.get('username')})
+    filename = "{}.json".format(sys.argv[1])
+    with open(filename, 'w') as json_file:
+        json.dump({sys.argv[1]: all_task}, json_file)
+    with open(filename, 'r') as f:
+        read_data = json.load(f)
+        reverse_data = read_data[sys.argv[1]][::-1]
+        with open(filename, 'w') as new_json:
+            json.dump({sys.argv[1]: reverse_data}, new_json)
