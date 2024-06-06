@@ -1,5 +1,6 @@
-e Puppet to run SED to change ".phpp" to ".php"
-exec { 'type fixer ftw':
-    command  => 'sed -i "s|class-wp-locale.phpp|class-wp-locale.php|g" /var/www/html/wp-settings.php',
-    provider => shell,
+# Fixing an apache server returning 500 error
+
+exec { 'fix error':
+  provider => 'shell',
+  command  => 'sed -i "s/phpp/php/g" /var/www/html/wp-settings.php'
 }
